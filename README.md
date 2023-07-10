@@ -1,17 +1,18 @@
 # clientip
 
-[![GoDoc](https://godoc.org/github.com/victorkt/clientip?status.svg)](http://godoc.org/github.com/victorkt/clientip)
-[![Go Report Card](https://goreportcard.com/badge/github.com/victorkt/clientip)](https://goreportcard.com/report/github.com/victorkt/clientip)
-[![Build Status](https://travis-ci.org/victorkt/clientip.svg?branch=master)](https://travis-ci.org/victorkt/clientip)
+[![GoDoc](https://godoc.org/github.com/dwisiswant0/clientip?status.svg)](http://godoc.org/github.com/dwisiswant0/clientip)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dwisiswant0/clientip)](https://goreportcard.com/report/github.com/dwisiswant0/clientip)
 
 Go library to retrieve the client IP from HTTP requests.
 
-This library is a port of [github.com/pbojinov/request-ip](https://github.com/pbojinov/request-ip) with additional tooling for Go servers.
+> History:
+> * This library is a fork of [victorkt/clientip](https://github.com/victorkt/clientip) with minimal refactor.
+> * This library is a port of [pbojinov/request-ip](https://github.com/pbojinov/request-ip) with additional tooling for Go servers.
 
 ## Installation
 
 ```shell script
-$ go get github.com/victorkt/clientip
+$ go get github.com/dwisiswant0/clientip
 ```
 
 ## Basic usage
@@ -24,7 +25,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/victorkt/clientip"
+	"github.com/dwisiswant0/clientip"
 )
 
 func main() {
@@ -51,7 +52,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/victorkt/clientip"
+	"github.com/dwisiswant0/clientip"
 )
 
 func main() {
