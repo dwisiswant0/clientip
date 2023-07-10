@@ -6,53 +6,24 @@ import (
 	"strings"
 )
 
+const headerXForwardedFor = "x-forwarded-for"
+
+var headerIPs = []string{
+	"x-client-ip", "cf-connecting-ip", "fastly-client-ip", "true-client-ip",
+	"x-real-ip", "x-cluster-client-ip", "x-forwarded", "forwarded-for",
+}
+
 // FromRequest returns the client IP address from the HTTP request
 func FromRequest(r *http.Request) net.IP {
-	// Standard headers used by Amazon EC2, Heroku, and others.
-	if ip := net.ParseIP(r.Header.Get("x-client-ip")); ip != nil {
-		return ip
-	}
-
 	// Load-balancers (AWS ELB) or proxies.
 	if ip := fromXForwardedFor(r.Header.Get("x-forwarded-for")); ip != nil {
 		return ip
 	}
 
-	// Cloudflare.
-	// @see https://support.cloudflare.com/hc/en-us/articles/200170986-How-does-Cloudflare-handle-HTTP-Request-headers-
-	// CF-Connecting-IP - applied to every request to the origin.
-	if ip := net.ParseIP(r.Header.Get("cf-connecting-ip")); ip != nil {
-		return ip
-	}
-
-	// Fastly and Firebase hosting header (When forwared to cloud function)
-	if ip := net.ParseIP(r.Header.Get("fastly-client-ip")); ip != nil {
-		return ip
-	}
-
-	// Akamai and Cloudflare: True-Client-IP.
-	if ip := net.ParseIP(r.Header.Get("true-client-ip")); ip != nil {
-		return ip
-	}
-
-	// Default nginx proxy/fcgi; alternative to x-forwarded-for, used by some proxies.
-	if ip := net.ParseIP(r.Header.Get("x-real-ip")); ip != nil {
-		return ip
-	}
-
-	// (Rackspace LB and Riverbed's Stingray)
-	// http://www.rackspace.com/knowledge_center/article/controlling-access-to-linux-cloud-sites-based-on-the-client-ip-address
-	// https://splash.riverbed.com/docs/DOC-1926
-	if ip := net.ParseIP(r.Header.Get("x-cluster-client-ip")); ip != nil {
-		return ip
-	}
-
-	if ip := net.ParseIP(r.Header.Get("x-forwarded")); ip != nil {
-		return ip
-	}
-
-	if ip := net.ParseIP(r.Header.Get("forwarded-for")); ip != nil {
-		return ip
+	for _, header := range headerIPs {
+		if ip := net.ParseIP(r.Header.Get(header)); ip != nil {
+			return ip
+		}
 	}
 
 	remoteAddr := r.RemoteAddr
